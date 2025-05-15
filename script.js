@@ -1,48 +1,51 @@
-// Trusted Types (if supported)
+// Enforce Trusted Types (modern browsers)
 window.trustedTypes?.createPolicy('default', {
-  createHTML: input => input.replace(/[&<>"'`=\/]/g, '')
+  createHTML: str => str.replace(/[&<>"']/g, "")
 });
 
-// Freeze the DOM
+// Lock down objects
+Object.freeze(Object.prototype);
 Object.freeze(document);
 Object.freeze(document.body);
-Object.freeze(Object.prototype);
 
-// Disable right-click
-document.addEventListener('contextmenu', e => e.preventDefault());
+// Basic sanitization
+function sanitize(input) {
+  return input
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
 
-// Anti-devtools (basic bait)
-setInterval(() => {
-  const devtoolsOpened = /./;
-  devtoolsOpened.toString = function () {
-    alert("DevTools detected. Reloading...");
-    location.reload();
-  };
-  console.log(devtoolsOpened);
-}, 2000);
-
-// Obfuscated IDs
-const form = document.getElementById("f9823");
-const textarea = document.getElementById("c1347");
-const commentList = document.getElementById("cList");
+// Form logic
+const form = document.getElementById("f9283");
+const textarea = document.getElementById("c7283");
+const commentsList = document.getElementById("list8972");
 
 form.addEventListener("submit", e => {
   e.preventDefault();
-
   const raw = textarea.value;
-  if (/script|<|>|onerror|onload|iframe|img/i.test(raw)) {
-    alert("Blocked dangerous content.");
+
+  // Very strict input validation
+  if (/script|<|>|on\w+=|img|iframe|style|svg|math/i.test(raw)) {
+    alert("Blocked dangerous input.");
     return;
   }
 
-  const escaped = raw
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
-
+  const clean = sanitize(raw);
   const p = document.createElement("p");
-  p.textContent = escaped;
-  commentList.appendChild(p);
-
+  p.textContent = clean;
+  commentsList.appendChild(p);
   textarea.value = "";
 });
+
+// Block mutation/injection attempts
+const observer = new MutationObserver(mutations => {
+  for (const mutation of mutations) {
+    if (mutation.addedNodes.length > 0) {
+      alert("DOM injection attempt blocked.");
+      location.reload();
+    }
+  }
+});
+observer.observe(document.body, { childList: true, subtree: true });
