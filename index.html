@@ -1,25 +1,35 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'strict-dynamic' 'nonce-abc123';
+    style-src 'self';
+    object-src 'none';
+    base-uri 'none';
+    require-trusted-types-for 'script';
+  ">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Deface Me</title>
   <link rel="stylesheet" href="style.css" />
-  <script defer src="script.js"></script>
+  <script nonce="abc123" defer src="script.js"></script>
 </head>
 <body>
   <div class="center-container">
     <h1 id="main-title">Deface me</h1>
-    <p>Hi, deface me nigga</p>
+    <p>Welcome. Try to break this — if you can.</p>
 
-    <form id="commentForm">
-      <textarea id="comment" name="comment" rows="4" placeholder="Put your text here..."></textarea><br>
-      <button type="submit">Send</button>
+    <form id="f9823" autocomplete="off">
+      <textarea id="c1347" rows="4" placeholder="Type your message here..."></textarea><br>
+      <button type="submit" id="s1845">Submit</button>
     </form>
 
     <div id="commentsSection">
-      <h3>Comment</h3>
-      <div id="commentsList"></div>
+      <h3>Comments</h3>
+      <div id="cList"></div>
     </div>
   </div>
 </body>
